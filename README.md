@@ -18,8 +18,8 @@ Script ini memerlukan beberapa paket berikut:
 - **ggplot2** – membuat visualisasi
 - **forcats** – mengatur urutan faktor (opsional)
   
-Instalasi paket (jika belum terpasang):
-```r
+### Instalasi paket (jika belum terpasang):
+
 install.packages(c("tidyverse", "readr", "ggplot2", "forcats"))
 
 ## Penjelasan Singkat Dataset
