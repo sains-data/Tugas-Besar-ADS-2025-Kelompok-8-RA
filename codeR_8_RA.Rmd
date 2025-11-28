@@ -1,0 +1,220 @@
+---
+title: "Tugas Besar Kelompok 8"
+author: "Keloompok 8"
+date: "2025-11-26"
+output: pdf_document
+---
+
+**Input Data**
+```{r}
+# ==== INPUT DATA ====
+
+jarak <- c("<1 km","1–2 km","2–3 km","3–4 km",">5 km")
+aktif <- c(39, 54, 24, 16, 45)
+tidak_aktif <- c(31, 38, 18, 6, 44)
+total <- aktif + tidak_aktif
+
+df <- data.frame(
+  Jarak = jarak,
+  Aktif = aktif,
+  Tidak_Aktif = tidak_aktif,
+  Total = total
+)
+
+df
+
+```
+
+**Barplot Jumlah Mahasiswa per Jarak**
+```{r}
+# ==== BARPLOT JUMLAH ====
+
+# ==== SET URUTAN KATEGORI ====
+df$Jarak <- factor(
+  df$Jarak,
+  levels = c("<1 km", "1–2 km", "2–3 km", "3–4 km", ">5 km")
+)
+
+# ==== BARPLOT JUMLAH ====
+library(ggplot2)
+
+ggplot(df, aes(x = Jarak, y = Total, fill = Jarak)) +
+  geom_bar(stat="identity") +
+  theme_minimal() +
+  labs(
+    title = "Jumlah Mahasiswa per Kategori Jarak",
+    y = "Jumlah Mahasiswa",
+    x = "Jarak Rumah"
+  )
+
+```
+
+**Membentuk Dua Kelompok (\<3 km vs \>=3 km)**
+```{r}
+# ==== PEMBENTUKAN KELOMPOK ====
+
+near_idx <- 1:3
+far_idx <- 4:5
+
+near_aktif <- sum(aktif[near_idx])
+near_total <- sum(total[near_idx])
+
+far_aktif <- sum(aktif[far_idx])
+far_total <- sum(total[far_idx])
+
+summary_groups <- data.frame(
+  Kelompok = c("(<3 km)", "(>= 3 km)"),
+  Aktif = c(near_aktif, far_aktif),
+  Total = c(near_total, far_total),
+  Proporsi = c(near_aktif/near_total, far_aktif/far_total)
+)
+
+summary_groups
+
+```
+
+**BARPLOT JUMLAH MAHASISWA AKTIF ORGANISASI DAN TIDAK AKTIF PER KELOMPOK JARAK**
+```{r}
+library(ggplot2)
+library(dplyr)
+
+# ==== SIAPKAN DATA KELOMPOK ====
+
+df_group2 <- data.frame(
+  Kelompok = c("< 3 km", "≥ 3 km"),
+  Aktif = c(near_aktif, far_aktif),
+  Tidak_Aktif = c(near_total - near_aktif,
+                  far_total - far_aktif)
+)
+
+# Ubah ke long format
+df_group2_long <- df_group2 %>%
+  tidyr::pivot_longer(cols = c("Aktif", "Tidak_Aktif"),
+                      names_to = "Status",
+                      values_to = "Jumlah")
+
+# Rename status
+df_group2_long$Status[df_group2_long$Status == "Tidak_Aktif"] <- "Tidak Aktif"
+
+# Warna sesuai tema (ijo & biru)
+colors_group <- c("Aktif" = "#2ECC71", "Tidak Aktif" = "#3498DB")
+
+# ==== GROUPED BARPLOT ====
+
+ggplot(df_group2_long, aes(x = Kelompok, y = Jumlah, fill = Status)) +
+  geom_bar(position = "dodge", stat = "identity") +
+  scale_fill_manual(values = colors_group) +
+  theme_minimal() +
+  labs(
+    title = "Jumlah Mahasiswa Aktif dan Tidak Aktif\nBerdasarkan Kelompok Jarak",
+    x = "Kelompok Jarak",
+    y = "Jumlah Mahasiswa",
+    fill = "Status"
+  ) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold")
+  )
+
+```
+
+**Pie Chart Proporsi Aktif (\<3km vs \>=3km)**
+```{r}
+library(ggplot2)
+library(dplyr)
+
+# --- Ubah nama kelompok ---
+df_pie <- summary_groups
+df_pie$Kelompok <- c("<3 km", ">=3 km")
+
+# Hitung label persentase
+df_pie <- df_pie %>%
+  mutate(
+    Percent = Proporsi * 100,
+    Label = paste0(round(Percent, 1), "%")
+  )
+
+# Warna palet (ijo, biru, putih) → 2 warna aja dipakai
+colors <- c("#2ECC71", "#3498DB")
+
+# Pie chart
+ggplot(df_pie, aes(x = "", y = Proporsi, fill = Kelompok)) +
+  geom_bar(stat = "identity", width = 1, color = "white") +
+  coord_polar("y") +
+  geom_text(aes(label = Label),
+            position = position_stack(vjust = 0.5),
+            color = "white",
+            size = 5,
+            fontface = "bold") +
+  scale_fill_manual(values = colors) +
+  labs(title = "Proporsi Mahasiswa Aktif Berdasarkan Jarak Rumah ke Kampus") +
+  theme_void() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"),
+    legend.title = element_blank()
+  )
+
+
+
+
+```
+
+**Uji Dua Proporsi (prop.test)**
+```{r}
+# ==== UJI DUA PROPORSI ====
+
+test <- prop.test(
+  c(near_aktif, far_aktif),
+  c(near_total, far_total),
+  correct = FALSE
+)
+
+# Membuat output rapi sebagai dataframe
+hasil_proporsi <- data.frame(
+  Proporsi = round(test$estimate, 3),
+  Lower_CI = round(test$conf.int[1], 3),
+  Upper_CI = round(test$conf.int[2], 3),
+  P_value  = round(test$p.value, 4)
+)
+
+hasil_proporsi
+
+
+```
+
+**Perhitungan Manual Z-Test**
+```{r}
+# ==== PERHITUNGAN MANUAL Z-TEST ====
+
+p1 <- near_aktif / near_total
+p2 <- far_aktif / far_total
+
+p_pool <- (near_aktif + far_aktif) / (near_total + far_total)
+
+se <- sqrt(p_pool * (1 - p_pool) * (1/near_total + 1/far_total))
+
+z <- (p1 - p2) / se
+p_value <- 2 * pnorm(-abs(z))
+
+manual_df <- data.frame(
+  Metode = "Z-Test Manual",
+  Z_Score = z,
+  P_Value = p_value,
+  Pooled_Proporsi = p_pool
+)
+
+manual_df
+
+```
+
+**Interpretasi**
+```{r}
+# ==== INTERPRETASI ====
+
+if (p_value < 0.05) {
+  cat("Hasil signifikan (p < 0.05): Ada perbedaan proporsi keaktifan organisasi antara kelompok < =3 km dan >3 km.\n")
+} else {
+  cat("Tidak signifikan (p > 0.05): Tidak ada bukti kuat bahwa jarak rumah mempengaruhi keaktifan organisasi.\n")
+}
+
+```
+
