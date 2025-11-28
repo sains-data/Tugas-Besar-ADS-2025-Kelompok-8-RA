@@ -33,19 +33,55 @@ jarak → kategori jarak (misal: "<1 km", "1–3 km", "3–5 km", "5–10 km", "
 status → status keaktifan organisasi ("Aktif", "Tidak Aktif")
 
 ## Struktur Repository
-📁 root/
+Tugas-Besar-ADS-2025-Kelompok-8-RA/
 │
-├── Dataset Kelompok&.xlsx
-│   → Dataset utama yang digunakan untuk analisis.
+├── code/
+│   └── codeR_8_RA.R        # Script utama analisis menggunakan R
 │
-├── Dataset Tugas Besar ADS 2025 - Karakteristik ....xlsx
-│   → Dataset tambahan/mentah yang menjadi sumber awal pengolahan data.
+├── data/
+│   └── ...                 # Dataset yang digunakan pada analisis
 │
-├── codeR_8_RA.Rmd
-│   → Script R Markdown berisi seluruh proses analisis, visualisasi, dan pengujian hipotesis.
+├── poster/
+│   └── POSTER_8_RA.pdf     # Poster final tugas besar
 │
-├── POSTER_8_RA.pdf
-│   → Hasil poster final yang dibuat berdasarkan output analisis.
+├── output/                 # (akan ditambahkan)
+│   └── ...                 # Output/visualisasi hasil running kode R
 │
-└── README.md
-    → Dokumentasi repositori yang berisi cara menjalankan script, paket yang digunakan, dan penjelasan struktur folder.
+├── github/
+│   └── CODEOWNERS          # Pengaturan reviewer & maintainer repo
+│
+├── README.md               # Dokumentasi utama (file ini)
+└── README/README.md        # Dokumentasi tambahan (jika diperlukan)
+
+🧠 Deskripsi Singkat Project
+
+Tugas besar ini bertujuan melakukan analisis data menggunakan bahasa pemrograman R, meliputi:
+- Pengolahan dan pembersihan data
+- Eksplorasi data (EDA)
+- Uji statistik sesuai kebutuhan analisis
+- Visualisasi data
+- Kesimpulan dan interpretasi
+
+Semua tahapan dijalankan dan terdokumentasi di folder code/.
+
+🧾 Poster
+
+Poster final berada pada folder:
+   poster/POSTER_8_RA.pdf
+Berisi rangkuman hasil analisis dalam bentuk visual yang ringkas.
+
+📤 Output (Akan Ditambahkan)
+
+Folder output/ akan berisi:
+- Grafik hasil analisis
+- Tabel summary
+- Export hasil uji statistik
+- Hasil visualisasi yang digunakan pada laporan/poster
+
+👥 Kontributor – Kelompok 8 RA
+1. M. Alsi Syahrulloh
+2. Wielman Itolo Halawa
+3. Anash Tasya Ausyaqila
+4. Lucia Advencia Rachel N.
+
+Folder ini akan otomatis terisi ketika script R dijalankan.
