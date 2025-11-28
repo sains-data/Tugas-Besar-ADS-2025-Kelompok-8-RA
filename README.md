@@ -13,14 +13,13 @@
 
 ## Paket R yang Digunakan
 Script ini memerlukan beberapa paket berikut:
-- **tidyverse** – manipulasi data dan visualisasi (ggplot2, dplyr, tidyr)
-- **readr** – membaca data CSV
-- **ggplot2** – membuat visualisasi
-- **forcats** – mengatur urutan faktor (opsional)
+- **tidyverse** – Manipulasi data dan visualisasi (ggplot2, dplyr, tidyr)
+- **dplyr** - Manipulasi data (hitung, tambah kolom, pipe %>%)
+- **ggplot2** – Membuat visualisasi
   
 ### Instalasi paket (jika belum terpasang):
 
-install.packages(c("tidyverse", "readr", "ggplot2", "forcats"))
+install.packages(c("tidyverse", "dplyr", "ggplot2", ))
 
 ## Penjelasan Singkat Dataset
 
